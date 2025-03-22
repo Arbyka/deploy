@@ -11,13 +11,13 @@ type User struct {
 	Name string `json:"name"`
 }
 
-// Data dummy
+// Data dummy (disimpan dalam memori)
 var users = []User{
 	{ID: 1, Name: "Alice"},
 	{ID: 2, Name: "Bob"},
 }
 
-// Handler untuk GET dan POST /api/users
+// Function handler yang diekspor untuk Vercel
 func UsersHandler(w http.ResponseWriter, r *http.Request) {
 	w.Header().Set("Content-Type", "application/json")
 
