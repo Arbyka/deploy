@@ -1,0 +1,39 @@
+package api
+
+import (
+	"encoding/json"
+	"net/http"
+)
+
+// Struktur data untuk pengguna
+type User struct {
+	ID   int    `json:"id"`
+	Name string `json:"name"`
+}
+
+// Data dummy
+var users = []User{
+	{ID: 1, Name: "Alice"},
+	{ID: 2, Name: "Bob"},
+}
+
+// Handler untuk GET dan POST /api/users
+func UsersHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+
+	switch r.Method {
+	case "GET":
+		json.NewEncoder(w).Encode(users)
+	case "POST":
+		var newUser User
+		if err := json.NewDecoder(r.Body).Decode(&newUser); err != nil {
+			http.Error(w, "Invalid request body", http.StatusBadRequest)
+			return
+		}
+		newUser.ID = len(users) + 1
+		users = append(users, newUser)
+		json.NewEncoder(w).Encode(newUser)
+	default:
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+	}
+}
